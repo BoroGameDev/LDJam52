@@ -31,7 +31,7 @@ namespace BoroGameDev.Victims {
         private FieldOfView eyes;
         [SerializeField]
         private Vector3 destination;
-        private int wanderCount;
+        private int wanderCount = 0;
 
         private void Awake() {
             eyes = GetComponent<FieldOfView>();
@@ -51,6 +51,9 @@ namespace BoroGameDev.Victims {
                     break;
                 case State.Wander:
                     Wander();
+                    break;
+                case State.Drain:
+                    Drain();
                     break;
                 default:
                     break;
@@ -80,13 +83,19 @@ namespace BoroGameDev.Victims {
             }
 
             if (reachedDestination) {
+                ++wanderCount;
                 destination = GetRoamingPosition();
                 MoveToTarget();
             }
 
-            if (wanderCount++ == 4) {
-
+            if (wanderCount == 4) {
+                wanderCount = 0;
+                this.state = State.Patrol;
             }
+        }
+
+        public void Drain() {
+            return;
         }
 
         private Vector3 GetRoamingPosition() {

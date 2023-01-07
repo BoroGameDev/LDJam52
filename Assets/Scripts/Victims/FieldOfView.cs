@@ -20,6 +20,9 @@ namespace BoroGameDev.Victims {
 
         [Header("View Mesh Rendering")]
         [SerializeField]
+        private bool RenderFOV;
+
+        [SerializeField]
         [Range(0, 1f)]
         private float MeshResolution;
         [SerializeField]
@@ -32,14 +35,16 @@ namespace BoroGameDev.Victims {
         private Mesh viewMesh;
 
         private void Start() {
-            viewMesh = new Mesh();
-            viewMesh.name = "View Mesh";
-            viewMeshFilter.mesh = viewMesh;
+            if (RenderFOV) {
+                viewMesh = new Mesh();
+                viewMesh.name = "View Mesh";
+                viewMeshFilter.mesh = viewMesh;
+            }
 
             StartCoroutine("FindTargetsWithDelay", 0.2f);
         }
 
-        private void LateUpdate() {
+        private void OnValidate() {
             DrawFieldOfView();
         }
 
@@ -51,6 +56,8 @@ namespace BoroGameDev.Victims {
         }
 
         void DrawFieldOfView() {
+            if (!RenderFOV) { return;  }
+
             int stepCount = Mathf.RoundToInt(ViewAngle * MeshResolution);
             float stepAngleSize = ViewAngle / stepCount;
             List<Vector2> viewPoints = new List<Vector2>();
@@ -139,7 +146,7 @@ namespace BoroGameDev.Victims {
             for (int i = 0; i < targets.Length; i++) {
                 Transform target = targets[i].transform;
                 Vector2 directionToTarget = (target.position - transform.position).normalized;
-                if (Vector2.Angle(transform.right, directionToTarget) < ViewAngle * 0.5f) {
+                if (Vector2.Angle(transform.up, directionToTarget) < ViewAngle * 0.5f) {
                     float distanceToTarget = Vector2.Distance(transform.position, target.position);
                     if (!Physics2D.Raycast(transform.position, directionToTarget, distanceToTarget, ObstacleMask)) {
                         visibleTargets.Add(target);
@@ -168,7 +175,7 @@ namespace BoroGameDev.Victims {
             if (!angleIsGlobal) {
                 angleDegrees += transform.eulerAngles.z;
             }
-            return new Vector3(Mathf.Cos(angleDegrees * Mathf.Deg2Rad), Mathf.Sin(angleDegrees * Mathf.Deg2Rad), 0f);
+            return new Vector3(Mathf.Sin(angleDegrees * Mathf.Deg2Rad), Mathf.Cos(angleDegrees * Mathf.Deg2Rad), 0f);
         }
 
         public struct ViewCastInfo {
