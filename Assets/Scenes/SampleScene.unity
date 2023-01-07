@@ -572,10 +572,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   Speed: 2
-  RotationSpeed: 900
+  RotationSpeed: 100
   stopDistance: 0.5
-  destination: {x: 0, y: 0, z: 0}
   reachedDestination: 0
+  state: 0
 --- !u!114 &306665051
 MonoBehaviour:
   m_ObjectHideFlags: 0
