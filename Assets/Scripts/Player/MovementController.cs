@@ -27,10 +27,12 @@ namespace BoroGameDev.Player {
         private Rigidbody2D body;
         private SpriteRenderer spriteRenderer;
         private Vector2 velocity;
+        private Animator anim;
 
         private void Start() {
             body = GetComponent<Rigidbody2D>();
             spriteRenderer = GetComponent<SpriteRenderer>();
+            anim = GetComponent<Animator>();
         }
 
         private void Update() {
@@ -52,6 +54,11 @@ namespace BoroGameDev.Player {
                 } else {
                     spriteRenderer.sprite = UpSprite;
                 }
+            }
+
+            anim.SetBool("walking", false);
+            if (moveInput.magnitude > 0.1f) {
+                anim.SetBool("walking", true);
             }
         }
 
