@@ -1,5 +1,5 @@
-using System.Collections;
-using System.Collections.Generic;
+using BoroGameDev.Victims;
+
 using UnityEngine;
 using UnityEditor;
 
@@ -32,6 +32,9 @@ public class WaypointManagerWindow : EditorWindow {
             CreateWaypoint();
         }
         if (Selection.activeGameObject != null && Selection.activeGameObject.GetComponent<Waypoint>()) {
+            if(GUILayout.Button("Add Branch Waypoint")) {
+                AddBranchWaypoint();
+            }
             if(GUILayout.Button("Create Waypoint Before")) {
                 CreateWaypointBefore();
             }
@@ -57,6 +60,21 @@ public class WaypointManagerWindow : EditorWindow {
         }
 
         Selection.activeGameObject = waypoint.gameObject;
+    }
+
+    void AddBranchWaypoint() {
+        GameObject waypointObject = new GameObject("Waypoint " + waypointRoot.childCount, typeof(Waypoint));
+        waypointObject.transform.SetParent(waypointRoot, false);
+
+        Waypoint newWaypoint = waypointObject.GetComponent<Waypoint>();
+        Waypoint selectedWaypoint = Selection.activeGameObject.GetComponent<Waypoint>();
+
+        waypointObject.transform.position = selectedWaypoint.transform.position;
+        waypointObject.transform.rotation = selectedWaypoint.transform.rotation;
+
+        selectedWaypoint.branches.Add(newWaypoint);
+
+        Selection.activeGameObject = newWaypoint.gameObject;
     }
 
     void CreateWaypointBefore() {

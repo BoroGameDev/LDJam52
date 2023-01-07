@@ -155,6 +155,8 @@ MonoBehaviour:
   previousWaypoint: {fileID: 252658155}
   nextWaypoint: {fileID: 69829124}
   width: 2.27
+  branches: []
+  branchRatio: 0.5
 --- !u!4 &55353444
 Transform:
   m_ObjectHideFlags: 0
@@ -202,6 +204,8 @@ MonoBehaviour:
   previousWaypoint: {fileID: 55353443}
   nextWaypoint: {fileID: 1564164490}
   width: 2.21
+  branches: []
+  branchRatio: 0.5
 --- !u!4 &69829125
 Transform:
   m_ObjectHideFlags: 0
@@ -249,6 +253,8 @@ MonoBehaviour:
   previousWaypoint: {fileID: 1087298582}
   nextWaypoint: {fileID: 252658155}
   width: 1.14
+  branches: []
+  branchRatio: 0.5
 --- !u!4 &138378893
 Transform:
   m_ObjectHideFlags: 0
@@ -819,6 +825,8 @@ MonoBehaviour:
   previousWaypoint: {fileID: 138378892}
   nextWaypoint: {fileID: 55353443}
   width: 1
+  branches: []
+  branchRatio: 0.5
 --- !u!4 &252658156
 Transform:
   m_ObjectHideFlags: 0
@@ -931,8 +939,9 @@ GameObject:
   - component: {fileID: 306665048}
   - component: {fileID: 306665049}
   - component: {fileID: 306665050}
+  - component: {fileID: 306665051}
   m_Layer: 9
-  m_Name: Target
+  m_Name: Victim
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -946,7 +955,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 306665045}
   m_LocalRotation: {x: -0, y: 0, z: -0.9975884, w: -0.069408275}
-  m_LocalPosition: {x: 6.991821, y: 3.6440682, z: 0.060274407}
+  m_LocalPosition: {x: 6.991821, y: 3.6440682, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -1058,7 +1067,24 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: dd5af554365476242afd417c34d1d8c1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Speed: 16
+  Speed: 2
+  RotationSpeed: 900
+  stopDistance: 0.5
+  destination: {x: 0, y: 0, z: 0}
+  reachedDestination: 0
+--- !u!114 &306665051
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 306665045}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: cc5a74f93bc2df147a71b85f67675972, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  currentWaypoint: {fileID: 1402093306}
 --- !u!1 &313091053
 GameObject:
   m_ObjectHideFlags: 0
@@ -1470,6 +1496,8 @@ MonoBehaviour:
   previousWaypoint: {fileID: 548063527}
   nextWaypoint: {fileID: 1402093306}
   width: 1.45
+  branches: []
+  branchRatio: 0.5
 --- !u!1 &519420028
 GameObject:
   m_ObjectHideFlags: 0
@@ -1620,6 +1648,8 @@ MonoBehaviour:
   previousWaypoint: {fileID: 1660802640}
   nextWaypoint: {fileID: 476278838}
   width: 1
+  branches: []
+  branchRatio: 0.5
 --- !u!4 &548063528
 Transform:
   m_ObjectHideFlags: 0
@@ -1778,6 +1808,8 @@ MonoBehaviour:
   previousWaypoint: {fileID: 1402093306}
   nextWaypoint: {fileID: 1087298582}
   width: 1
+  branches: []
+  branchRatio: 0.5
 --- !u!4 &652688352
 Transform:
   m_ObjectHideFlags: 0
@@ -2219,7 +2251,7 @@ GameObject:
   m_Component:
   - component: {fileID: 759307749}
   m_Layer: 0
-  m_Name: Targets
+  m_Name: Victims
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -2357,6 +2389,8 @@ MonoBehaviour:
   previousWaypoint: {fileID: 652688351}
   nextWaypoint: {fileID: 138378892}
   width: 1
+  branches: []
+  branchRatio: 0.5
 --- !u!4 &1087298583
 Transform:
   m_ObjectHideFlags: 0
@@ -3304,6 +3338,8 @@ MonoBehaviour:
   previousWaypoint: {fileID: 476278838}
   nextWaypoint: {fileID: 652688351}
   width: 1
+  branches: []
+  branchRatio: 0.5
 --- !u!4 &1402093307
 Transform:
   m_ObjectHideFlags: 0
@@ -3351,6 +3387,8 @@ MonoBehaviour:
   previousWaypoint: {fileID: 69829124}
   nextWaypoint: {fileID: 1660802640}
   width: 1
+  branches: []
+  branchRatio: 0.5
 --- !u!4 &1564164491
 Transform:
   m_ObjectHideFlags: 0
@@ -3620,6 +3658,8 @@ MonoBehaviour:
   previousWaypoint: {fileID: 1564164490}
   nextWaypoint: {fileID: 548063527}
   width: 1
+  branches: []
+  branchRatio: 0.5
 --- !u!4 &1660802641
 Transform:
   m_ObjectHideFlags: 0

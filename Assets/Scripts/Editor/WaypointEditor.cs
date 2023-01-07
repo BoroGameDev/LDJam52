@@ -1,5 +1,5 @@
-using System.Collections;
-using System.Collections.Generic;
+using BoroGameDev.Victims;
+
 using UnityEngine;
 using UnityEditor;
 
@@ -36,6 +36,13 @@ public class WaypointEditor {
             Vector3 offsetTo = waypoint.nextWaypoint.transform.right * -waypoint.nextWaypoint.width * 0.5f;
 
             Gizmos.DrawLine(waypoint.transform.position + offset, waypoint.nextWaypoint.transform.position + offsetTo);
+        }
+
+        if (waypoint.branches != null) {
+            foreach(Waypoint branch in waypoint.branches) {
+                Gizmos.color = Color.blue;
+                Gizmos.DrawLine(waypoint.transform.position, branch.transform.position);
+            }
         }
     }
 }
