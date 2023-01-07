@@ -6,19 +6,53 @@ namespace BoroGameDev.Player {
         [Range(0f, 10f)]
         private float MoveSpeed;
 
+        [SerializeField]
+        [Range(0f, 10f)]
+        private float RotationSpeed;
+
+        [SerializeField]
+        private Transform Flashlight;
+
+        [Header("Sprites")]
+        [SerializeField]
+        private Sprite UpSprite;
+        [SerializeField]
+        private Sprite DownSprite;
+        [SerializeField]
+        private Sprite LeftSprite;
+        [SerializeField]
+        private Sprite RightSprite;
+
+        private Vector2 moveInput;
         private Rigidbody2D body;
+        private SpriteRenderer spriteRenderer;
         private Vector2 velocity;
 
         private void Start() {
             body = GetComponent<Rigidbody2D>();
+            spriteRenderer = GetComponent<SpriteRenderer>();
         }
 
         private void Update() {
-            Vector3 mousePos = Camera.main.ScreenToWorldPoint(new Vector3(Input.mousePosition.x, Input.mousePosition.y, Camera.main.transform.position.z));
-            Vector3 dir = mousePos - transform.position;
-            float angle = Mathf.Atan2(dir.y, dir.x) * Mathf.Rad2Deg;
-            transform.rotation = Quaternion.AngleAxis(angle, Vector3.forward);
-            velocity = new Vector2(Input.GetAxis("Horizontal"), Input.GetAxis("Vertical")).normalized * MoveSpeed;
+            moveInput = new Vector2(Input.GetAxis("Horizontal"), Input.GetAxis("Vertical"));
+            velocity = moveInput.normalized * MoveSpeed;
+
+            float angle = Mathf.Atan2(-velocity.x, velocity.y) * Mathf.Rad2Deg;
+            Quaternion targetRotation = Quaternion.AngleAxis(angle, Vector3.forward);
+            Flashlight.transform.rotation = Quaternion.RotateTowards(Flashlight.transform.rotation, targetRotation, RotationSpeed);
+            if (Mathf.Abs(moveInput.x) > 0.1f) {
+                if (moveInput.x > 0) {
+                    spriteRenderer.sprite = RightSprite;
+                } else {
+                    spriteRenderer.sprite = LeftSprite;
+                }
+            } else {
+                if (moveInput.y < 0) {
+                    spriteRenderer.sprite = DownSprite;
+                } else {
+                    spriteRenderer.sprite = UpSprite;
+                }
+            }
         }
 
         private void FixedUpdate() {
