@@ -18,6 +18,8 @@ namespace BoroGameDev.Victims {
         }
 
         void Update() {
+            if (movement.state != MovementController.State.Patrol) { return; }
+
             if (movement.reachedDestination) {
                 bool shouldBranch = false;
 

@@ -151,6 +151,10 @@ namespace BoroGameDev.Victims {
         public List<Transform> GetVisibleTargets() {
             return visibleTargets;
         }
+
+        public bool HasVisibleTargets() {
+            return visibleTargets.Count > 0;
+        }
         
         public float GetViewRadius() {
             return ViewRadius;
