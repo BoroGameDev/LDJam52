@@ -20,6 +20,12 @@ namespace BoroGameDev.Victims {
         [SerializeField]
         private Transform EyesTransform;
 
+        [SerializeField]
+        private LayerMask ObstacleMask;
+
+        [SerializeField]
+        private float obstacleDetectionRadius = 3f;
+
         [Header("Sprites")]
         [SerializeField]
         private Sprite UpSprite;
@@ -29,7 +35,19 @@ namespace BoroGameDev.Victims {
         private Sprite LeftSprite;
         [SerializeField]
         private Sprite RightSprite;
+        [SerializeField]
+        private bool showGizmos = false;
 
+        private Vector2[] directions = {
+            new Vector2(0, 1).normalized,
+            new Vector2(1, 1).normalized,
+            new Vector2(1, 0).normalized,
+            new Vector2(1, -1).normalized,
+            new Vector2(0, -1).normalized,
+            new Vector2(-1, -1).normalized,
+            new Vector2(-1, 0).normalized,
+            new Vector2(-1, 1).normalized
+        };
 
         public bool reachedDestination;
 
@@ -40,6 +58,8 @@ namespace BoroGameDev.Victims {
         private Animator anim;
         private HealthController health;
         private SpriteRenderer spriteRenderer;
+        private float[] interestGizmo;
+        Collider2D[] obstacles;
 
         private void Awake() {
             eyes = GetComponentInChildren<FieldOfView>();
@@ -54,6 +74,8 @@ namespace BoroGameDev.Victims {
         }
 
         private void Update() {
+            obstacles = Physics2D.OverlapCircleAll(transform.position, obstacleDetectionRadius, ObstacleMask);
+
             switch (stateManager.GetState()) {
                 case VictimState.Patrol:
                     Patrol();
@@ -113,7 +135,14 @@ namespace BoroGameDev.Victims {
         }
 
         private Vector3 GetRoamingPosition() {
-            return transform.position + GetRandomDirection() * Random.Range(1f, 5f);
+            Vector3 randomDestination;
+            RaycastHit2D hit;
+            do {
+                randomDestination = transform.position + GetRandomDirection() * Random.Range(1f, 5f);
+                hit = Physics2D.Raycast(transform.position, randomDestination, randomDestination.magnitude, ObstacleMask);
+            } while (hit.collider != null);
+
+            return randomDestination;
         }
 
         private Vector3 GetRandomDirection() {
@@ -127,9 +156,9 @@ namespace BoroGameDev.Victims {
         private void MoveToTarget() {
             anim.SetBool("Walking", true);
             Vector3 destinationDirection = destination - transform.position;
-            destinationDirection.z = 0f;
-
             float destinationDistance = destinationDirection.magnitude;
+
+            destinationDirection = GetMoveDirection();
 
             if (destinationDistance >= stopDistance) {
                 reachedDestination = false;
@@ -157,6 +186,66 @@ namespace BoroGameDev.Victims {
             }
         }
 
+        private Vector3 GetMoveDirection() {
+            float[] danger = new float[8];
+            float[] interest = new float[8];
+
+            Vector3 destinationDirection = destination - transform.position;
+            destinationDirection.z = 0f;
+
+            (danger, interest) = GetSeekSteering(destinationDirection, danger, interest);
+            (danger, interest) = GetAvoidanceSteering(destinationDirection, danger, interest);
+
+            for (int i = 0; i < directions.Length; i++) {
+                interest[i] = Mathf.Clamp01(interest[i] - danger[i]);
+            }
+
+            interestGizmo = interest;
+
+            Vector2 outputDirection = Vector2.zero;
+            for (int i = 0; i < directions.Length; i++) {
+                outputDirection += directions[i] * interest[i];
+            }
+
+            outputDirection.Normalize();
+
+            return outputDirection;
+        }
+
+        private (float[] danger, float[] interest) GetSeekSteering(Vector3 destinationDirection, float[] danger, float[] interest) {
+            if (destination == null) {
+                return (danger, interest);
+            }
+
+            for (int i = 0; i < directions.Length; i++) {
+                float result = Vector2.Dot(destinationDirection.normalized, directions[i]);
+
+                interest[i] = Mathf.Clamp01(Mathf.Max(interest[i], result));
+            }
+
+            return (danger, interest);
+        }
+
+        private (float[] danger, float[] interest) GetAvoidanceSteering(Vector3 destinationDirection, float[] danger, float[] interest) {
+            if (destination == null) {
+                return (danger, interest);
+            }
+
+            foreach(Collider2D obstacleCollider in obstacles) {
+                Vector2 directionToObstacle = obstacleCollider.ClosestPoint(transform.position) - (Vector2)transform.position;
+                float distanceToObstacle = directionToObstacle.magnitude;
+
+                float weight = distanceToObstacle <= 1f ? 1 : (obstacleDetectionRadius - distanceToObstacle) / obstacleDetectionRadius;
+
+                for (int i = 0; i < directions.Length; i++) {
+                    float result = Vector2.Dot(directionToObstacle.normalized, directions[i]) * weight;
+                    danger[i] = Mathf.Clamp01(Mathf.Max(danger[i], result));
+                }
+            }
+
+            return (danger, interest);
+        }
+
         private void LateUpdate() {
             if (eyes.GetVisibleTargets().Count > 0) {
                 Transform target = eyes.GetVisibleTargets().First<Transform>();
@@ -166,6 +255,16 @@ namespace BoroGameDev.Victims {
 
                 this.SetDestination(pos);
                 this.stateManager.SetChase();
+            }
+        }
+
+        private void OnDrawGizmos() {
+            if (!showGizmos || !Application.isPlaying) { return; }
+
+            Gizmos.color = Color.yellow;
+
+            for (int i = 0; i < interestGizmo.Length; i++) {
+                Gizmos.DrawRay(transform.position, directions[i].normalized * interestGizmo[i] * 3f);
             }
         }
     }
