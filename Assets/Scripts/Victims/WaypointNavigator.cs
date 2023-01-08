@@ -1,16 +1,16 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 namespace BoroGameDev.Victims {
     public class WaypointNavigator : MonoBehaviour {
         MovementController movement;
+        StateManager state;
         public Waypoint currentWaypoint;
 
         private int direction = 0;
 
         void Awake() {
             movement = GetComponent<MovementController>();
+            state = GetComponent<StateManager>();
         }
 
         private void Start() {
@@ -18,7 +18,7 @@ namespace BoroGameDev.Victims {
         }
 
         void Update() {
-            if (movement.state != MovementController.State.Patrol) { return; }
+            if (state.GetState() != VictimState.Patrol) { return; }
 
             if (movement.reachedDestination) {
                 bool shouldBranch = false;

@@ -28,6 +28,7 @@ namespace BoroGameDev.Player {
         private SpriteRenderer spriteRenderer;
         private Vector2 velocity;
         private Animator anim;
+        private bool CanMove = true;
 
         private void Start() {
             body = GetComponent<Rigidbody2D>();
@@ -35,7 +36,16 @@ namespace BoroGameDev.Player {
             anim = GetComponent<Animator>();
         }
 
+        public void SetCanMove(bool canMove) {
+            this.CanMove = canMove;
+        }
+
         private void Update() {
+            if (!this.CanMove) {
+                velocity = Vector2.zero;
+                return;
+            }
+
             moveInput = new Vector2(Input.GetAxis("Horizontal"), Input.GetAxis("Vertical"));
             velocity = moveInput.normalized * MoveSpeed;
 
@@ -63,6 +73,11 @@ namespace BoroGameDev.Player {
         }
 
         private void FixedUpdate() {
+            if (!this.CanMove) {
+                velocity = Vector2.zero;
+                return;
+            }
+
             body.MovePosition(body.position + velocity * Time.deltaTime);
         }
     }

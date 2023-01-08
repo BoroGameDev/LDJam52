@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace BoroGameDev.Victims {
+namespace BoroGameDev.Utilities {
     public class FieldOfView : MonoBehaviour {
         [SerializeField]
         private float ViewRadius;
@@ -44,7 +44,7 @@ namespace BoroGameDev.Victims {
             StartCoroutine("FindTargetsWithDelay", 0.2f);
         }
 
-        private void OnValidate() {
+        private void LateUpdate() {
             DrawFieldOfView();
         }
 
@@ -64,7 +64,7 @@ namespace BoroGameDev.Victims {
             ViewCastInfo oldCastInfo = new ViewCastInfo();
 
             for (int i = 0; i <= stepCount; i++) {
-                float angle = transform.eulerAngles.z + ViewAngle * 0.5f - stepAngleSize * i;
+                float angle = -transform.eulerAngles.z + ViewAngle * 0.5f - stepAngleSize * i;
                 ViewCastInfo castInfo = ViewCast(angle);
 
                 if (i > 0) {
@@ -173,7 +173,7 @@ namespace BoroGameDev.Victims {
         
         public Vector3 DirectionFromAngle(float angleDegrees, bool angleIsGlobal) {
             if (!angleIsGlobal) {
-                angleDegrees += transform.eulerAngles.z;
+                angleDegrees -= transform.eulerAngles.z;
             }
             return new Vector3(Mathf.Sin(angleDegrees * Mathf.Deg2Rad), Mathf.Cos(angleDegrees * Mathf.Deg2Rad), 0f);
         }

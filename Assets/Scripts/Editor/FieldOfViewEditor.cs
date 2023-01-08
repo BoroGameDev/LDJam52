@@ -1,4 +1,4 @@
-using BoroGameDev.Victims;
+using BoroGameDev.Utilities;
 
 using UnityEngine;
 using UnityEditor;

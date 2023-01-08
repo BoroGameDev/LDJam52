@@ -1,5 +1,7 @@
-using UnityEngine;
+using BoroGameDev.Player;
+using BoroGameDev.Utilities;
 using System.Linq;
+using UnityEngine;
 
 namespace BoroGameDev.Victims {
     public class MovementController : MonoBehaviour {
@@ -17,24 +19,15 @@ namespace BoroGameDev.Victims {
 
         public bool reachedDestination;
 
-        [HideInInspector]
-        public enum State {
-            Patrol,
-            Wander,
-            Chase,
-            Escape,
-            Drain
-        }
-
-        public State state = State.Patrol;
-
         private FieldOfView eyes;
         [SerializeField]
         private Vector3 destination;
         private int wanderCount = 0;
+        private StateManager stateManager;
 
         private void Awake() {
             eyes = GetComponent<FieldOfView>();
+            stateManager = GetComponent<StateManager>();
         }
 
         public void SetDestination(Vector3 _destination) {
@@ -42,17 +35,17 @@ namespace BoroGameDev.Victims {
         }
 
         private void Update() {
-            switch (state) {
-                case State.Patrol:
+            switch (stateManager.GetState()) {
+                case VictimState.Patrol:
                     Patrol();
                     break;
-                case State.Chase:
+                case VictimState.Chase:
                     Chase();
                     break;
-                case State.Wander:
+                case VictimState.Wander:
                     Wander();
                     break;
-                case State.Drain:
+                case VictimState.Drain:
                     Drain();
                     break;
                 default:
@@ -73,7 +66,7 @@ namespace BoroGameDev.Victims {
 
             if (!eyes.HasVisibleTargets()) {
                 destination = GetRoamingPosition();
-                this.state = State.Wander;
+                this.stateManager.SetWander();
             }
         }
 
@@ -90,7 +83,7 @@ namespace BoroGameDev.Victims {
 
             if (wanderCount == 4) {
                 wanderCount = 0;
-                this.state = State.Patrol;
+                this.stateManager.SetPatrol();
             }
         }
 
@@ -118,10 +111,10 @@ namespace BoroGameDev.Victims {
 
             if (destinationDistance >= stopDistance) {
                 reachedDestination = false;
-                float angle = Mathf.Atan2(destinationDirection.y, destinationDirection.x) * Mathf.Rad2Deg;
+                float angle = Mathf.Atan2(destinationDirection.y, destinationDirection.x) * Mathf.Rad2Deg - 90;
                 Quaternion targetRotation = Quaternion.AngleAxis(angle, Vector3.forward);
                 transform.rotation = Quaternion.RotateTowards(transform.rotation, targetRotation, RotationSpeed * Time.deltaTime);
-                transform.Translate(Vector2.right * Speed * Time.deltaTime);
+                transform.Translate(Vector2.up * Speed * Time.deltaTime);
             } else {
                 reachedDestination = true;
             }
@@ -129,10 +122,13 @@ namespace BoroGameDev.Victims {
 
         private void LateUpdate() {
             if (eyes.GetVisibleTargets().Count > 0) {
-                Vector3 target = eyes.GetVisibleTargets().First<Transform>().position;
-                target.z = 0f;
-                this.SetDestination(target);
-                this.state = State.Chase;
+                Transform target = eyes.GetVisibleTargets().First<Transform>();
+                PlayerController _player = target.GetComponent<PlayerController>();
+                Vector3 pos = target.position;
+                pos.z = 0f;
+
+                this.SetDestination(pos);
+                this.stateManager.SetChase();
             }
         }
     }
