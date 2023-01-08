@@ -19,9 +19,9 @@ namespace BoroGameDev.Utilities {
 				}
 			}
 		}
-        #endregion
+		#endregion
 
-        /**
+		/**
 		 * Game Event Example:
 		 *		public event Action<type> onEventHappened;
 		 *		public void EventHappened(type param) {
@@ -43,5 +43,19 @@ namespace BoroGameDev.Utilities {
 		 *		}
 		 *		void EventListener(type param) {...}
 		 **/
+
+		public event Action onVictimDied;
+		public void VictimDied() {
+			if (onVictimDied != null) {
+				onVictimDied();
+            }
+        }
+
+		public event Action onYouLose;
+		public void YouLose() {
+			if (onYouLose != null) {
+				onYouLose();
+            }
+        }
     }
 }

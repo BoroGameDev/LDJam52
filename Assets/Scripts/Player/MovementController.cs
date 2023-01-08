@@ -66,9 +66,9 @@ namespace BoroGameDev.Player {
                 }
             }
 
-            anim.SetBool("walking", false);
+            anim.SetBool("Walking", false);
             if (moveInput.magnitude > 0.1f) {
-                anim.SetBool("walking", true);
+                anim.SetBool("Walking", true);
             }
         }
 

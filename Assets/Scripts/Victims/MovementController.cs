@@ -24,10 +24,14 @@ namespace BoroGameDev.Victims {
         private Vector3 destination;
         private int wanderCount = 0;
         private StateManager stateManager;
+        private Animator anim;
+        private HealthController health;
 
         private void Awake() {
             eyes = GetComponent<FieldOfView>();
             stateManager = GetComponent<StateManager>();
+            anim = GetComponent<Animator>();
+            health = GetComponent<HealthController>();
         }
 
         public void SetDestination(Vector3 _destination) {
@@ -88,6 +92,8 @@ namespace BoroGameDev.Victims {
         }
 
         public void Drain() {
+            anim.SetBool("Walking", false);
+            health.DrainHealth(0.25f);
             return;
         }
 
@@ -104,6 +110,7 @@ namespace BoroGameDev.Victims {
         }
 
         private void MoveToTarget() {
+            anim.SetBool("Walking", true);
             Vector3 destinationDirection = destination - transform.position;
             destinationDirection.z = 0f;
 
