@@ -20,21 +20,33 @@ namespace BoroGameDev.Victims {
         [SerializeField]
         private Transform EyesTransform;
 
+        [Header("Sprites")]
+        [SerializeField]
+        private Sprite UpSprite;
+        [SerializeField]
+        private Sprite DownSprite;
+        [SerializeField]
+        private Sprite LeftSprite;
+        [SerializeField]
+        private Sprite RightSprite;
+
+
         public bool reachedDestination;
 
         private FieldOfView eyes;
-        [SerializeField]
         private Vector3 destination;
         private int wanderCount = 0;
         private StateManager stateManager;
         private Animator anim;
         private HealthController health;
+        private SpriteRenderer spriteRenderer;
 
         private void Awake() {
             eyes = GetComponentInChildren<FieldOfView>();
             stateManager = GetComponent<StateManager>();
             anim = GetComponent<Animator>();
             health = GetComponent<HealthController>();
+            spriteRenderer = GetComponent<SpriteRenderer>();
         }
 
         public void SetDestination(Vector3 _destination) {
@@ -124,6 +136,20 @@ namespace BoroGameDev.Victims {
                 float angle = Mathf.Atan2(destinationDirection.y, destinationDirection.x) * Mathf.Rad2Deg - 90;
                 Quaternion targetRotation = Quaternion.AngleAxis(angle, Vector3.forward);
                 EyesTransform.rotation = Quaternion.RotateTowards(EyesTransform.rotation, targetRotation, RotationSpeed * Time.deltaTime);
+
+                if (Mathf.Abs(destinationDirection.x) > Mathf.Abs(destinationDirection.y)) {
+                    if (destinationDirection.x > 0) {
+                        spriteRenderer.sprite = RightSprite;
+                    } else {
+                        spriteRenderer.sprite = LeftSprite;
+                    }
+                } else {
+                    if (destinationDirection.y < 0) {
+                        spriteRenderer.sprite = DownSprite;
+                    } else {
+                        spriteRenderer.sprite = UpSprite;
+                    }
+                }
 
                 transform.Translate(destinationDirection.normalized * Speed * Time.deltaTime);
             } else {
