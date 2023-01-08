@@ -17,6 +17,9 @@ namespace BoroGameDev.Victims {
         [Range(0f, 2f)]
         private float stopDistance;
 
+        [SerializeField]
+        private Transform EyesTransform;
+
         public bool reachedDestination;
 
         private FieldOfView eyes;
@@ -28,7 +31,7 @@ namespace BoroGameDev.Victims {
         private HealthController health;
 
         private void Awake() {
-            eyes = GetComponent<FieldOfView>();
+            eyes = GetComponentInChildren<FieldOfView>();
             stateManager = GetComponent<StateManager>();
             anim = GetComponent<Animator>();
             health = GetComponent<HealthController>();
@@ -120,8 +123,9 @@ namespace BoroGameDev.Victims {
                 reachedDestination = false;
                 float angle = Mathf.Atan2(destinationDirection.y, destinationDirection.x) * Mathf.Rad2Deg - 90;
                 Quaternion targetRotation = Quaternion.AngleAxis(angle, Vector3.forward);
-                transform.rotation = Quaternion.RotateTowards(transform.rotation, targetRotation, RotationSpeed * Time.deltaTime);
-                transform.Translate(Vector2.up * Speed * Time.deltaTime);
+                EyesTransform.rotation = Quaternion.RotateTowards(EyesTransform.rotation, targetRotation, RotationSpeed * Time.deltaTime);
+
+                transform.Translate(destinationDirection.normalized * Speed * Time.deltaTime);
             } else {
                 reachedDestination = true;
             }

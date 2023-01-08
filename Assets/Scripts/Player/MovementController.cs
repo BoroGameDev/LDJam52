@@ -52,6 +52,7 @@ namespace BoroGameDev.Player {
             float angle = Mathf.Atan2(-velocity.x, velocity.y) * Mathf.Rad2Deg;
             Quaternion targetRotation = Quaternion.AngleAxis(angle, Vector3.forward);
             Flashlight.transform.rotation = Quaternion.RotateTowards(Flashlight.transform.rotation, targetRotation, RotationSpeed);
+
             if (Mathf.Abs(moveInput.x) > 0.1f) {
                 if (moveInput.x > 0) {
                     spriteRenderer.sprite = RightSprite;

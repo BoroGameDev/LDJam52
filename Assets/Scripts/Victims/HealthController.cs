@@ -22,10 +22,6 @@ namespace BoroGameDev.Victims {
             this.anim = GetComponent<Animator>();
         }
 
-        private void LateUpdate() {
-            HealthCanvas.transform.rotation = Quaternion.Euler(0f, 0f, -transform.rotation.y);
-        }
-
         public float GetHealth() {
             return Health;
         }
