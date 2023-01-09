@@ -154,7 +154,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   LoadingScreen: {fileID: 570632157}
   m_ProgressBar: {fileID: 6966874585969555042}
-  paused: 0
 --- !u!4 &173290585
 Transform:
   m_ObjectHideFlags: 0
@@ -404,7 +403,8 @@ PrefabInstance:
       propertyPath: m_Color.r
       value: 0.2332397
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: 5304286297541589093, guid: 113c3526f8054fb4888c9adc8dea89cc, type: 3}
   m_SourcePrefab: {fileID: 100100000, guid: 113c3526f8054fb4888c9adc8dea89cc, type: 3}
 --- !u!114 &6966874585969555042 stripped
 MonoBehaviour:

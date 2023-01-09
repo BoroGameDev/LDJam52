@@ -5,9 +5,6 @@ EditorBuildSettings:
   m_ObjectHideFlags: 0
   serializedVersion: 2
   m_Scenes:
-  - enabled: 0
-    path: Assets/Scenes/DamionsScene.unity
-    guid: 8c9cfa26abfee488c85f1582747f6a02
   - enabled: 1
     path: Assets/Scenes/PersistantScene.unity
     guid: 60f24152146d18448973c3991ec02735
@@ -17,4 +14,7 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scenes/MatthewScene.unity
     guid: a88c496107fe5d443b65268ff74ee27a
+  - enabled: 1
+    path: Assets/Scenes/GameOver.unity
+    guid: d64ad3e748e35dd469617783730d16de
   m_configObjects: {}

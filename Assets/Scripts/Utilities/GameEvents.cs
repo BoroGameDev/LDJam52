@@ -58,10 +58,10 @@ namespace BoroGameDev.Utilities {
             }
         }
 
-		public event Action onYouLose;
-		public void YouLose() {
+		public event Action<string> onYouLose;
+		public void YouLose(string reason) {
 			if (onYouLose != null) {
-				onYouLose();
+				onYouLose(reason);
             }
         }
     }

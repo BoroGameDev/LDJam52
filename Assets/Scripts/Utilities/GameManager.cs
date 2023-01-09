@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 
@@ -10,14 +11,14 @@ namespace BoroGameDev.Utilities {
 		MANAGER = 0,
 		TITLE_SCREEN = 1,
 		TEST_LEVEL = 2,
-		PAUSE_MENU = 3
+		GAME_OVER = 3
 	}
 
 	public class GameManager : MonoBehaviour {
 		#region Singleton
 		public static GameManager Instance { get; private set; }
 
-		void Awake() {
+        void Awake() {
 			if (Instance == null) {
 				Instance = this;
 				DontDestroyOnLoad(gameObject);
@@ -36,33 +37,54 @@ namespace BoroGameDev.Utilities {
 		[SerializeField] private GameObject LoadingScreen;
 		[SerializeField] private ProgressBar m_ProgressBar;
 
-		public bool paused;
+		private int VictimCount = 0;
 
 		List<AsyncOperation> scenesLoading = new List<AsyncOperation>();
 		float TotalProgress;
 
+		string LoseReason = "";
+
 		#region Unity Methods
 		private void Start() {
-			paused = false;
 			SceneManager.LoadSceneAsync((int)SceneIndexes.TITLE_SCREEN, LoadSceneMode.Additive);
 			currentScene = SceneIndexes.TITLE_SCREEN;
 			LoadingScreen.SetActive(false);
+			GameEvents.Instance.onYouLose += GameOver;
 			//currentScene = SceneIndexes.TEST_LEVEL;
 		}
-		#endregion
 
-		#region Custom Methods
-		public void PauseGame() {
-			SceneManager.LoadSceneAsync((int)SceneIndexes.PAUSE_MENU, LoadSceneMode.Additive);
-			currentScene = SceneIndexes.PAUSE_MENU;
-			paused = true;
-		}
+        private void OnDestroy() {
+			GameEvents.Instance.onYouLose -= GameOver;
+        }
+        #endregion
 
-		public void UnpauseGame() {
-			SceneManager.UnloadSceneAsync((int)SceneIndexes.PAUSE_MENU);
-			currentScene = SceneIndexes.TEST_LEVEL;
-			paused = false;
-		}
+        #region Custom Methods
+		private void GameOver(string reason) {
+			LoseReason = reason;
+			LoadingScreen.SetActive(true);
+
+			scenesLoading.Add(SceneManager.UnloadSceneAsync((int)SceneIndexes.TEST_LEVEL));
+			scenesLoading.Add(SceneManager.LoadSceneAsync((int)SceneIndexes.GAME_OVER, LoadSceneMode.Additive));
+
+			StartCoroutine(GetSceneLoadProgress());
+
+			currentScene = SceneIndexes.GAME_OVER;
+			GameEvents.Instance.SceneLoaded(SceneIndexes.GAME_OVER);
+			LoadingScreen.SetActive(false);
+        }
+
+        public void AddVictim() {
+			VictimCount++;
+        }
+        public void SetVictimCount(int num) {
+			VictimCount = num;
+        }
+        public int GetVictimCount() {
+			return VictimCount;
+        }
+		public string GetLoseReason() {
+			return LoseReason;
+        }
 
 		public void SetPlayer(GameObject _player) {
 			Player = _player;
@@ -100,11 +122,9 @@ namespace BoroGameDev.Utilities {
 		}
 
 		public void ToTitle() {
-			paused = false;
 			LoadingScreen.SetActive(true);
 
-			scenesLoading.Add(SceneManager.UnloadSceneAsync((int)SceneIndexes.PAUSE_MENU));
-			scenesLoading.Add(SceneManager.UnloadSceneAsync((int)SceneIndexes.TEST_LEVEL));
+			scenesLoading.Add(SceneManager.UnloadSceneAsync((int)SceneIndexes.GAME_OVER));
 			scenesLoading.Add(SceneManager.LoadSceneAsync((int)SceneIndexes.TITLE_SCREEN, LoadSceneMode.Additive));
 
 			StartCoroutine(GetSceneLoadProgress());

@@ -40,7 +40,7 @@ namespace BoroGameDev.Player {
             this.Health = Mathf.Max(this.Health - damage, 0);
 
             if (this.Health == 0) {
-                GameEvents.Instance.YouLose();
+                GameEvents.Instance.YouLose("Life force ran ou.");
             }
         }
     }

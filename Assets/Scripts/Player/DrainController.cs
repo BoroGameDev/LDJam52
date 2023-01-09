@@ -27,6 +27,10 @@ namespace BoroGameDev.Player {
             GameEvents.Instance.onVictimDied += VictimDied;
         }
 
+        private void Start() {
+            GameManager.Instance.SetVictimCount(0);
+        }
+
         private void OnDestroy() {
             GameEvents.Instance.onVictimDied -= VictimDied;
         }
@@ -65,6 +69,7 @@ namespace BoroGameDev.Player {
 
         public void VictimDied() {
             this.draining = false;
+            GameManager.Instance.AddVictim();
             move.SetCanMove(true);
         }
 

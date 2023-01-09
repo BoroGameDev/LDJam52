@@ -251,6 +251,12 @@ namespace BoroGameDev.Victims {
             }
         }
 
+        private void OnCollisionEnter2D(Collision2D collision) {
+            if (collision.gameObject.CompareTag("Player") && stateManager.GetState() == VictimState.Chase) {
+                GameEvents.Instance.YouLose("You got staked!");
+            }
+        }
+
         private void OnDrawGizmos() {
             if (!showGizmos || !Application.isPlaying) { return; }
 
