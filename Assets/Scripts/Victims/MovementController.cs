@@ -135,14 +135,7 @@ namespace BoroGameDev.Victims {
         }
 
         private Vector3 GetRoamingPosition() {
-            Vector3 randomDestination;
-            RaycastHit2D hit;
-            do {
-                randomDestination = transform.position + GetRandomDirection() * Random.Range(1f, 5f);
-                hit = Physics2D.Raycast(transform.position, randomDestination, randomDestination.magnitude, ObstacleMask);
-            } while (hit.collider != null);
-
-            return randomDestination;
+            return transform.position + GetRandomDirection() * Random.Range(1f, 2f);
         }
 
         private Vector3 GetRandomDirection() {

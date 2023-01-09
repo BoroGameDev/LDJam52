@@ -48,6 +48,7 @@ namespace BoroGameDev.Player {
                 if (!draining) {
                     HarvestVictim();
                 } else {
+                    // Problem here
                     draining = false;
                     move.SetCanMove(true);
                     Victim.SetWander();

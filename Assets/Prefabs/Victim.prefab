@@ -328,6 +328,7 @@ GameObject:
   - component: {fileID: 7925490900455886732}
   - component: {fileID: 7925490900455886835}
   - component: {fileID: 7925490900455886834}
+  - component: {fileID: 1965050247}
   m_Layer: 9
   m_Name: Victim
   m_TagString: Untagged
@@ -368,10 +369,15 @@ MonoBehaviour:
   RotationSpeed: 100
   stopDistance: 0.5
   EyesTransform: {fileID: 7925490900179149908}
+  ObstacleMask:
+    serializedVersion: 2
+    m_Bits: 128
+  obstacleDetectionRadius: 3
   UpSprite: {fileID: 21300000, guid: 6a8f9659b1bff9f44b61f3be5a8ecee1, type: 3}
   DownSprite: {fileID: 21300000, guid: 0f5886b11c693f7468f7399d284d1cef, type: 3}
   LeftSprite: {fileID: 21300000, guid: 0b6004d53b47bfa4696c0581c431cfb1, type: 3}
   RightSprite: {fileID: 21300000, guid: 1fdcb0e79c351c645aa9238a2621aadd, type: 3}
+  showGizmos: 1
   reachedDestination: 0
 --- !u!114 &7925490900455886735
 MonoBehaviour:
@@ -454,7 +460,7 @@ SpriteRenderer:
   m_SortingLayerID: 35828629
   m_SortingLayer: 4
   m_SortingOrder: 0
-  m_Sprite: {fileID: -2413806693520163455, guid: a86470a33a6bf42c4b3595704624658b, type: 3}
+  m_Sprite: {fileID: 21300000, guid: 0f5886b11c693f7468f7399d284d1cef, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
@@ -501,6 +507,27 @@ CircleCollider2D:
   m_Offset: {x: 0, y: 0}
   serializedVersion: 2
   m_Radius: 0.5
+--- !u!50 &1965050247
+Rigidbody2D:
+  serializedVersion: 4
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7925490900455886832}
+  m_BodyType: 0
+  m_Simulated: 1
+  m_UseFullKinematicContacts: 0
+  m_UseAutoMass: 0
+  m_Mass: 1
+  m_LinearDrag: 0
+  m_AngularDrag: 0.05
+  m_GravityScale: 0
+  m_Material: {fileID: 0}
+  m_Interpolate: 0
+  m_SleepingMode: 1
+  m_CollisionDetection: 0
+  m_Constraints: 4
 --- !u!1 &7925490900530631624
 GameObject:
   m_ObjectHideFlags: 0

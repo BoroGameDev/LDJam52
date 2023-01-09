@@ -8,17 +8,26 @@ namespace BoroGameDev.Victims {
 
         private int direction = 0;
 
+        private bool started = false;
+
         void Awake() {
             movement = GetComponent<MovementController>();
             state = GetComponent<StateManager>();
+            started = false;
         }
 
-        private void Start() {
+        public void Init(Waypoint point) {
+            SetWaypoint(point);
+            started = true;
+        }
+
+        public void SetWaypoint(Waypoint point) {
+            currentWaypoint = point;
             movement.SetDestination(currentWaypoint.GetPosition());
         }
 
         void Update() {
-            if (state.GetState() != VictimState.Patrol) { return; }
+            if (!started || state.GetState() != VictimState.Patrol) { return; }
 
             if (movement.reachedDestination) {
                 bool shouldBranch = false;
@@ -26,6 +35,7 @@ namespace BoroGameDev.Victims {
                 if(currentWaypoint.branches != null && currentWaypoint.branches.Count > 0) {
                     shouldBranch = Random.Range(0f, 1f) <= currentWaypoint.branchRatio;
                 }
+
 
                 if (shouldBranch) {
                     currentWaypoint = currentWaypoint.branches[Random.Range(0, currentWaypoint.branches.Count - 1)];

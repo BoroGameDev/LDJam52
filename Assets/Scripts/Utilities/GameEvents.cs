@@ -44,6 +44,13 @@ namespace BoroGameDev.Utilities {
 		 *		void EventListener(type param) {...}
 		 **/
 
+		public event Action<SceneIndexes> onSceneLoaded;
+		public void SceneLoaded(SceneIndexes _index) {
+			if (onSceneLoaded != null) {
+				onSceneLoaded(_index);
+			}
+		}
+
 		public event Action onVictimDied;
 		public void VictimDied() {
 			if (onVictimDied != null) {
